@@ -15,7 +15,8 @@
     <File Name="STM32F103XB_FLASH.ld"/>
   </VirtualDirectory>
   <VirtualDirectory Name="src">
-    <File Name="main.c"/>
+    <File Name="main.c" ExcludeProjConfig=""/>
+    <File Name="interrupts.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="HAL">
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c" ExcludeProjConfig=""/>
@@ -25,6 +26,10 @@
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="stm32f1xx_hal_conf.h"/>
+    <File Name="interrupts.h"/>
+    <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS/Include/core_cm3.h"/>
+    <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"/>
+    <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Debug">
     <File Name="Debug/FirstProject.elf"/>
@@ -46,7 +51,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="Cross GCC ( arm-none-eabi ) 5.2.1" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="overwrite" BuildLnkWithGlobalSettings="overwrite" BuildResWithGlobalSettings="append">
-      <Compiler Options="" C_Options="-mcpu=cortex-m3 -mthumb" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="" C_Options="-g;-mcpu=cortex-m3 -mthumb" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
         <IncludePath Value="$(WorkspacePath)/../STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS/Device/ST/STM32F1xx/Include"/>
         <IncludePath Value="$(WorkspacePath)/../STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS/Include"/>
@@ -63,10 +68,10 @@
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
-      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+      <Debugger IsRemote="no" RemoteHostName="localhost" RemoteHostPort="3333" DebuggerPath="" IsExtended="no">
         <DebuggerSearchPaths/>
-        <PostConnectCommands/>
-        <StartupCommands/>
+        <PostConnectCommands>target remote localhost:3333</PostConnectCommands>
+        <StartupCommands>--tui </StartupCommands>
       </Debugger>
       <PreBuild/>
       <PostBuild>

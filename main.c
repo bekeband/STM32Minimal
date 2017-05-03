@@ -3,35 +3,10 @@
 /* The indicator LED connect to C port 13-th PIN */
 
 #include "stm32f1xx_hal.h"
-/* MACRO for LED ON-OFF functions */
-#define IND_LED_ON()		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET)
-#define IND_LED_OFF()		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET)
-
-/* We must be defined the SysTick handler, because the HAL library does not 
- * define 'standard' Systick handler, so the Systick interrupt procedure goes 
- * to infinity cycle.  
- * */
- 
-void SysTick_Handler(void)
-{
-  HAL_IncTick();
-}
+#include "interrupts.h"
 
 /**
-  * @brief  System Clock Configuration
-  *         The system Clock is configured as follow : 
-  *            System Clock source            = PLL (HSE)
-  *            SYSCLK(Hz)                     = 72000000
-  *            HCLK(Hz)                       = 72000000
-  *            AHB Prescaler                  = 1
-  *            APB1 Prescaler                 = 2
-  *            APB2 Prescaler                 = 1
-  *            HSE Frequency(Hz)              = 8000000
-  *            HSE PREDIV1                    = 1
-  *            PLLMUL                         = 9
-  *            Flash Latency(WS)              = 2
-  * @param  None
-  * @retval None
+ System Clock, and osc configuration for 8000000 Hz Minimal STM 32 board.
   */
 void SystemClock_Config(void)
 {
@@ -65,36 +40,21 @@ void SystemClock_Config(void)
   }
 }
 
-/* @brief  Indicator LED port configuration.
- * The indicatorLED is PC port 13-th pin.*/
-void InitIndicatorLED()
-{
-  GPIO_InitTypeDef  gpioinitstruct = {0};
-	/* C port clock enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-
-  /* configure LED port GPI/O */
-  gpioinitstruct.Pin        = GPIO_PIN_13;
-  gpioinitstruct.Mode       = GPIO_MODE_OUTPUT_PP;
-  gpioinitstruct.Speed      = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOC, &gpioinitstruct);
-  IND_LED_OFF();
-}
 
 int main()
 {
+	/* Enable the DIVZERO exception. */
+  SCB->CCR |= SCB_CCR_DIV_0_TRP;
 	HAL_Init();
 	SystemClock_Config();
-	InitIndicatorLED();
+	Init_ErrLED();
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_13, 15 / 0);
 	while (1)
-	{	/* Blinking LED */
-		IND_LED_ON();
-		/*First LED on. If on the LED we are sure that program reached this point. */
-		HAL_Delay(500);
-		/* 50 percent duty cycle LED lighting. If we took any mistake of clock, we 
-		wiil seen any half-light cindering or something else. */
-		IND_LED_OFF();
-		HAL_Delay(500);
+	{	
+		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12))
+		{
+			HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+		}
 	}		
 	
 	return 0;
