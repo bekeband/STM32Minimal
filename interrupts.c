@@ -5,7 +5,7 @@
  * */
 
 #include <stdint.h>
-#include "interrupts.h"
+#include "init.h"
 #include "stm32f1xx_hal.h"
 
 /* We must be defined the SysTick handler, because the HAL library does not 
@@ -16,27 +16,6 @@
 static uint16_t blink_number = 0;
 /* Error number value for error output to indicator LED. */
 static uint16_t error_number = NO_ERROR;
-
-/* @brief  Indicator LED port configuration.
- * The indicatorLED is PC port 13-th pin.*/
-void InitIndicatorLED()
-{
-  GPIO_InitTypeDef  gpioinitstruct = {0};
-	/* C port clock enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-
-  /* configure LED port GPI/O */
-  gpioinitstruct.Pin        = GPIO_PIN_13;
-  gpioinitstruct.Mode       = GPIO_MODE_OUTPUT_PP;
-  gpioinitstruct.Speed      = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOC, &gpioinitstruct);
-  IND_LED_OFF();
-}
-/* Initialize the error LED */
-void Init_ErrLED()
-{
-	InitIndicatorLED();
-}
 
 /* @brief SysTick_Handler(void) The systick everi 1 msec handler. This procedure
  * threatments the error_number state LED blinking as well. */

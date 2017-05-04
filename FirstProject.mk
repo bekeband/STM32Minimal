@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Beke András
-Date                   :=02/05/17
+Date                   :=04/05/17
 CodeLitePath           :=/home/bekeband/.codelite
 LinkerName             :=/usr/local/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-g++
 SharedObjectLinkerName :=/usr/local/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-g++ -shared -fPIC
@@ -60,7 +60,8 @@ AS       := /usr/local/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_CMSIS_Device_ST_STM32F1xx_Source_Templates_system_stm32f1xx.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_CMSIS_Device_ST_STM32F1xx_Source_Templates_gcc_startup_stm32f103xb.s$(ObjectSuffix) $(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/interrupts.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_gpio.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_rcc.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_cortex.c$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_CMSIS_Device_ST_STM32F1xx_Source_Templates_system_stm32f1xx.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_CMSIS_Device_ST_STM32F1xx_Source_Templates_gcc_startup_stm32f103xb.s$(ObjectSuffix) $(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/interrupts.c$(ObjectSuffix) $(IntermediateDirectory)/init.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_gpio.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_rcc.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_cortex.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(ObjectSuffix) \
+	$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(ObjectSuffix) 
 
 
 
@@ -130,6 +131,14 @@ $(IntermediateDirectory)/interrupts.c$(DependSuffix): interrupts.c
 $(IntermediateDirectory)/interrupts.c$(PreprocessSuffix): interrupts.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/interrupts.c$(PreprocessSuffix) interrupts.c
 
+$(IntermediateDirectory)/init.c$(ObjectSuffix): init.c $(IntermediateDirectory)/init.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/bekeband/CLWorkSpace/STM32Workspace/FirstProject/init.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/init.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/init.c$(DependSuffix): init.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/init.c$(ObjectSuffix) -MF$(IntermediateDirectory)/init.c$(DependSuffix) -MM init.c
+
+$(IntermediateDirectory)/init.c$(PreprocessSuffix): init.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/init.c$(PreprocessSuffix) init.c
+
 $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_gpio.c$(ObjectSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_gpio.c$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/bekeband/CLWorkSpace/STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_gpio.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_gpio.c$(DependSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c
@@ -161,6 +170,22 @@ $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driv
 
 $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_cortex.c$(PreprocessSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_cortex.c$(PreprocessSuffix) ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c
+
+$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(ObjectSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/bekeband/CLWorkSpace/STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(DependSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(DependSuffix) -MM ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c
+
+$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(PreprocessSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(PreprocessSuffix) ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c
+
+$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(ObjectSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/bekeband/CLWorkSpace/STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(DependSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(DependSuffix) -MM ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c
+
+$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(PreprocessSuffix): ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(PreprocessSuffix) ../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

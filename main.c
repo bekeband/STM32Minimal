@@ -3,7 +3,7 @@
 /* The indicator LED connect to C port 13-th PIN */
 
 #include "stm32f1xx_hal.h"
-#include "interrupts.h"
+#include "init.h"
 
 /**
  System Clock, and osc configuration for 8000000 Hz Minimal STM 32 board.
@@ -48,7 +48,9 @@ int main()
 	HAL_Init();
 	SystemClock_Config();
 	Init_ErrLED();
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_13, 15 / 0);
+
+	SD_SPI2_Init();
+
 	while (1)
 	{	
 		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12))

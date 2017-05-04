@@ -17,12 +17,15 @@
   <VirtualDirectory Name="src">
     <File Name="main.c" ExcludeProjConfig=""/>
     <File Name="interrupts.c"/>
+    <File Name="init.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="HAL">
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c" ExcludeProjConfig=""/>
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c" ExcludeProjConfig=""/>
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c" ExcludeProjConfig=""/>
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c" ExcludeProjConfig=""/>
+    <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c"/>
+    <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="stm32f1xx_hal_conf.h"/>
@@ -30,6 +33,8 @@
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS/Include/core_cm3.h"/>
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"/>
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h"/>
+    <File Name="init.h"/>
+    <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Debug">
     <File Name="Debug/FirstProject.elf"/>
