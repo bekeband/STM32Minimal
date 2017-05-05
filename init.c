@@ -5,8 +5,9 @@
 #include "stm32f1xx_hal.h"
 
 
-/*
- * SD card SPI handle. SPI2 channel.
+/*	
+ * @brief SD card SPI handle. SPI2 channel.Load datas for SD card initialize 
+ * process.
  */
 
 static SPI_HandleTypeDef 	sd_spi2_handle = 
@@ -88,6 +89,7 @@ void SD_SPI2_Init()
   gpioinitstruct.Speed      = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &gpioinitstruct);
 
+	SPI_Init(&sd_spi2_handle);
 	
 	
 	
