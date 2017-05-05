@@ -70,7 +70,57 @@
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName).elf" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Debug" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>
-      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+      <Environment EnvVarSetName="Linux" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="localhost" RemoteHostPort="3333" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands>target remote localhost:3333</PostConnectCommands>
+        <StartupCommands>--tui </StartupCommands>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild>
+        <Command Enabled="yes">arm-none-eabi-objcopy -O ihex $(IntermediateDirectory)/$(ProjectName).elf $(IntermediateDirectory)/$(ProjectName).hex</Command>
+        <Command Enabled="yes">arm-none-eabi-size $(IntermediateDirectory)/$(ProjectName).elf</Command>
+        <Command Enabled="yes">arm-none-eabi-objdump -d -f $(IntermediateDirectory)/$(ProjectName).elf &gt; $(IntermediateDirectory)/$(ProjectName).lst</Command>
+      </PostBuild>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="DebugF1Cube" CompilerType="Cross GCC ( arm-none-eabi ) 5.2.1" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="overwrite" BuildLnkWithGlobalSettings="overwrite" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="-g;-mcpu=cortex-m3 -mthumb" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="."/>
+        <IncludePath Value="$(WorkspacePath)/../STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS/Device/ST/STM32F1xx/Include"/>
+        <IncludePath Value="$(WorkspacePath)/../STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS/Include"/>
+        <IncludePath Value="$(WorkspacePath)/../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Inc"/>
+        <Preprocessor Value="STM32F103xB"/>
+      </Compiler>
+      <Linker Options="-T $(ProjectPath)/STM32F103XB_FLASH.ld -Xlinker --gc-sections -Xlinker -Map=$(IntermediateDirectory)/$(ProjectName).map -mthumb -mcpu=cortex-m3 -march=armv7-m" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).elf" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Debug" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
+      <Environment EnvVarSetName="Linux" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="localhost" RemoteHostPort="3333" DebuggerPath="" IsExtended="no">

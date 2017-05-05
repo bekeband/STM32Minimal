@@ -60,6 +60,8 @@ AS       := /usr/local/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
+ARM_NONE_EABI_PATH:=/usr/local/gcc_arm
+CUBE_F1_PATH:=/home/bekeband/CLWorkSpace/STM32Cube_FW_F1_V1.4.0
 Objects0=$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_CMSIS_Device_ST_STM32F1xx_Source_Templates_system_stm32f1xx.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_CMSIS_Device_ST_STM32F1xx_Source_Templates_gcc_startup_stm32f103xb.s$(ObjectSuffix) $(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/interrupts.c$(ObjectSuffix) $(IntermediateDirectory)/init.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_gpio.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_rcc.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_cortex.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_spi.c$(ObjectSuffix) \
 	$(IntermediateDirectory)/up_up_STM32Cube_FW_F1_V1.4.0_Drivers_STM32F1xx_HAL_Driver_Src_stm32f1xx_hal_dma.c$(ObjectSuffix) 
 
@@ -81,9 +83,9 @@ $(OutputFile): $(IntermediateDirectory)/.d $(Objects)
 
 PostBuild:
 	@echo Executing Post Build commands ...
-	/usr/local/gcc_arm/arm-none-eabi-objcopy -O ihex ./Debug/FirstProject.elf ./Debug/FirstProject.hex
-	/usr/local/gcc_arm/arm-none-eabi-size ./Debug/FirstProject.elf
-	/usr/local/gcc_arm/arm-none-eabi-objdump -d -f ./Debug/FirstProject.elf > ./Debug/FirstProject.lst
+	arm-none-eabi-objcopy -O ihex ./Debug/FirstProject.elf ./Debug/FirstProject.hex
+	arm-none-eabi-size ./Debug/FirstProject.elf
+	arm-none-eabi-objdump -d -f ./Debug/FirstProject.elf > ./Debug/FirstProject.lst
 	@echo Done
 
 MakeIntermediateDirs:
