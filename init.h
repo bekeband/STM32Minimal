@@ -38,6 +38,11 @@ void SD_SPI2_Init();
  * */
 #define DATA_BAUD_PRESCALER		4
 
+#define SELECT_SD()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET)
+#define DESELECT_SD()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET)
+
+#define SD_DUMMY_BYTE	(0xFF)
+
 /* ----------------------------------------------------------------*/
 
 #endif

@@ -47,9 +47,17 @@ void Init_ErrLED()
 	InitIndicatorLED();
 }
 
-/* @brief SPI_Init(SPI channel) Initialize on the got parameter SPI channel
-		
+/* @brief Handle for SPI general error.  
+ * @TODO What we are to do?   
  * */
+
+void SPI_Error()
+{
+	
+}
+
+/* @brief SPI_Init(SPI channel) Initialize on the got parameter SPI channel
+	*/
 
 void SPI_Init(SPI_HandleTypeDef* SPI_Chan)
 {
@@ -59,6 +67,47 @@ void SPI_Init(SPI_HandleTypeDef* SPI_Chan)
     /* Should not occur */
     while(1) {};
   }
+}
+
+/**
+  * @brief SPI WriteByte a byte to device General SPI write byte procedure.
+  * @param Value: value to be written TimeOut timeout value. 
+  * @retval None
+  */
+static void SPI_WriteByte(uint8_t Value, SPI_HandleTypeDef handle, uint32_t TimeOut)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+
+  status = HAL_SPI_Transmit(&handle, (uint8_t*) &Value, 1, TimeOut);
+
+  /* Check the communication status */
+  if(status != HAL_OK)
+  {
+    /* Execute user timeout callback */
+    SPI_Error(handle);
+  }
+}
+
+
+/* @brief SD_CARD_SPI_SELECT(): Select SD card SPI communication. To use must 
+ * be initialize SPI with <400kHz baud rate.
+ * Power ON or card insertion
+After supply voltage reached 2.2 volts, wait for one millisecond at least. 
+ * Set SPI clock rate between 100 kHz and 400 kHz. Set DI and CS high and apply 74 or 
+ * more clock pulses to SCLK. The card will enter its native operating mode and go 
+ * ready to accept native command. (http://elm-chan.org/docs/mmc/mmc_e.html)
+*/
+
+void SD_CARD_SPI_SELECT()
+{	uint16_t counter;
+	/* deselect chip select line */
+	DESELECT_SD();
+	/* min. 74 clock bits write */
+  for (counter = 0; counter <= 9; counter++)
+  {
+    SPI_WriteByte(SD_DUMMY_BYTE, sd_spi2_handle, 10000);
+  }
+	
 }
 
 /* @brief SD_SPI2_Init(): initialize SPI 2 signals for SD card reader, 
@@ -89,8 +138,4 @@ void SD_SPI2_Init()
   gpioinitstruct.Speed      = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &gpioinitstruct);
 
-	SPI_Init(&sd_spi2_handle);
-	
-	
-	
 }

@@ -18,6 +18,7 @@
     <File Name="main.c" ExcludeProjConfig=""/>
     <File Name="interrupts.c"/>
     <File Name="init.c"/>
+    <File Name="sd_spi.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="HAL">
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c" ExcludeProjConfig=""/>
@@ -35,6 +36,7 @@
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h"/>
     <File Name="init.h"/>
     <File Name="../../STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h"/>
+    <File Name="sd_spi.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Debug">
     <File Name="Debug/FirstProject.elf"/>
