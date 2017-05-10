@@ -5,8 +5,9 @@
  * */
 
 #include <stdint.h>
-#include "init.h"
 #include "stm32f1xx_hal.h"
+#include "init.h"
+#include "interrupts.h"
 
 /* We must be defined the SysTick handler, because the HAL library does not 
  * define 'standard' Systick handler, so the Systick interrupt procedure goes 
@@ -16,6 +17,7 @@
 static uint16_t blink_number = 0;
 /* Error number value for error output to indicator LED. */
 static uint16_t error_number = NO_ERROR;
+
 
 /* @brief SysTick_Handler(void) The systick everi 1 msec handler. This procedure
  * threatments the error_number state LED blinking as well. */
@@ -28,10 +30,16 @@ void SysTick_Handler(void)
 	{
 		blink_number++;
 		if (blink_number <= (error_number * 2))
-			IND_LED_TOGGLE();
+			IND_LED_TOGGLE(); 
 		if (blink_number >= ((error_number * 2) + BLINK_GAP))
 			blink_number = 0;
 	}
+#if defined SD_CARD_CHECK_INTERVAL
+	if (!(HAL_GetTick() % SD_CARD_CHECK_INTERVAL))
+	{
+		SD_CARD_CHECK_FLAG = 1;
+	}
+#endif
 }
 
 /* NMI handler, and fault exceptions. We do not call default handler, (infiniti loop) 
@@ -71,3 +79,9 @@ void UsageFault_Handler(void)
 {
 	error_number = UsageFault_NUMBER;
 }
+
+/* @brief Force error number from outside. Purpose of test and debug. */
+void ForceErrorNumber(uint16_t enumb)
+{
+	error_number = enumb;
+};

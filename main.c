@@ -3,7 +3,9 @@
 /* The indicator LED connect to C port 13-th PIN */
 
 #include "stm32f1xx_hal.h"
+#include "interrupts.h"
 #include "init.h"
+#include "sd_spi.h"
 
 /**
  System Clock, and osc configuration for 8000000 Hz Minimal STM 32 board.
@@ -41,6 +43,7 @@ void SystemClock_Config(void)
 }
 
 
+
 int main()
 {
 	/* Enable the DIVZERO exception. */
@@ -48,14 +51,25 @@ int main()
 	HAL_Init();
 	SystemClock_Config();
 	Init_ErrLED();
+	
+	SD_SPI2_Init(); // Initialize SPI2 for SD card. 
 
-	SD_SPI2_Init();
-
+/* Main program loop. */
 	while (1)
 	{	
-		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12))
+		
+		if (GetSDCardCheckFlag())
 		{
-			HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+			SD_Card_SPI_Select();
+			if (ResetCard() == SD_SPI_OK)
+			{	
+				ForceErrorNumber(4);
+			} else
+			{
+				ForceErrorNumber(2);				
+			}
+				
+			ClearSDCardCheckFlag();
 		}
 	}		
 	

@@ -26,22 +26,23 @@ void Init_ErrLED();
 
 /* ----------------- Error LED end --------------------------------*/
 
-void SD_SPI2_Init();
+/* ----------------- SD card I/O-s --------------------------------*/
 
-/* @brief Baud rate prescaler for configutration fhase, To the SD card SPI mode
- * must be at least 74 bits times keep high the data line. The max. SPI speed of 
- * 400 kHz,and this prescaler applies this SPI speed. 
- * */
-#define CONFIG_BAUD_PRESCALER	256
+#define SPI2_SIGNAL_PORT	GPIOB
 
-/* @brief Th prescaler determine the data stream of SPI2 SD card channel. 
- * */
-#define DATA_BAUD_PRESCALER		4
+#define SPI2_SIGNAL_PORT_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE()
+
+#define SPI2_CLK_PIN	GPIO_PIN_13
+#define SPI2_MOSI_PIN	GPIO_PIN_15
+#define SPI2_MISO_PIN	GPIO_PIN_14
+
+#define SD_CARD_CS_PORT	GPIOB
+#define SD_CARD_CS_PORT_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE()
+
+#define SD_CARD_CS_PIN	GPIO_PIN_11
 
 #define SELECT_SD()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET)
 #define DESELECT_SD()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET)
-
-#define SD_DUMMY_BYTE	(0xFF)
 
 /* ----------------------------------------------------------------*/
 
