@@ -50,11 +50,11 @@ void SPI_WriteByte(uint8_t Value, SPI_HandleTypeDef handle, uint32_t TimeOut)
   * @retval None
   */
 
-void SPI_WriteBuf(void* Value, uint16_t size, SPI_HandleTypeDef handle, uint32_t TimeOut)
+void SPI_WriteBuf(void* Buffer, uint16_t size, SPI_HandleTypeDef handle, uint32_t TimeOut)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  status = HAL_SPI_Transmit(&handle, (uint8_t*) Value, size, TimeOut);
+  status = HAL_SPI_Transmit(&handle, (uint8_t*) Buffer, size, TimeOut);
 
   /* Check the communication status */
   if(status != HAL_OK)
@@ -65,6 +65,26 @@ void SPI_WriteBuf(void* Value, uint16_t size, SPI_HandleTypeDef handle, uint32_t
 }
 
 /**
+  * @brief SPI_ReadBuf Read size of byte to the Buffer from SPI port designated by handle.
+  * @param Value the byte to read, TimeOut the timeout value to read. 
+  * @retval None
+  */
+void SPI_ReadBuf(uint8_t* Buffer, uint16_t size, SPI_HandleTypeDef handle, uint32_t TimeOut)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+
+  status = HAL_SPI_Receive(&handle, (uint8_t*) Buffer, size, TimeOut);
+
+  /* Check the communication status */
+  if(status != HAL_OK)
+  {
+    /* Execute user timeout callback */
+    SPI_Error(handle);
+  }
+}
+
+
+/**
   * @brief SPI_ReadByte Read a byte from SPI port designated by handle.
   * @param Value the byte to read, TimeOut the timeout value to read. 
   * @retval None
@@ -72,7 +92,8 @@ void SPI_WriteBuf(void* Value, uint16_t size, SPI_HandleTypeDef handle, uint32_t
 void SPI_ReadByte(uint8_t* Value, SPI_HandleTypeDef handle, uint32_t TimeOut)
 {
   HAL_StatusTypeDef status = HAL_OK;
-
+	
+//	status = HAL_SPI_TransmitReceive(&handle, (uint8_t*) Value, 1, TimeOut);
   status = HAL_SPI_Receive(&handle, (uint8_t*) Value, 1, TimeOut);
 
   /* Check the communication status */

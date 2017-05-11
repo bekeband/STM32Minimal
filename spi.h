@@ -34,4 +34,11 @@ void SPI_ReadByte(uint8_t* Value, SPI_HandleTypeDef handle, uint32_t TimeOut);
 
 void SPI_WriteBuf(void* Value, uint16_t size, SPI_HandleTypeDef handle, uint32_t TimeOut);
 
+/**
+  * @brief SPI_ReadBuf Read size of byte to the Buffer from SPI port designated by handle.
+  * @param Value the byte to read, TimeOut the timeout value to read. 
+  * @retval None
+  */
+void SPI_ReadBuf(uint8_t* Buffer, uint16_t size, SPI_HandleTypeDef handle, uint32_t TimeOut);
+
 #endif

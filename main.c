@@ -50,6 +50,7 @@ int main()
   SCB->CCR |= SCB_CCR_DIV_0_TRP;
 	HAL_Init();
 	SystemClock_Config();
+	
 	Init_ErrLED();
 	
 	SD_SPI2_Init(); // Initialize SPI2 for SD card. 
@@ -60,10 +61,12 @@ int main()
 		
 		if (GetSDCardCheckFlag())
 		{
+
 			SD_Card_SPI_Select();
 			if (ResetCard() == SD_SPI_OK)
 			{	
 				ForceErrorNumber(4);
+				GetSDCardFeatures();
 			} else
 			{
 				ForceErrorNumber(2);				
@@ -74,4 +77,4 @@ int main()
 	}		
 	
 	return 0;
-}
+	}

@@ -60,19 +60,18 @@ typedef enum {
 	SD_SPI_ERROR = -1
 } SD_SPI_STATE;
  
-void SD_SPI2_Init(); 
-void SD_Card_SPI_Select(); 
-
-/* @brief ResetCard() */
-SD_SPI_STATE ResetCard();
-
 /* Struct of command bits (all command are 40 bits) */
 typedef union {
 	uint32_t argw;
-	struct {
+	struct {		// response of CMD01 command
 			uint32_t res01: 1;
 			uint32_t HCS: 1;
-			uint32_t res02: 29;		
+			uint32_t res02: 30;		
+	};
+	struct {		// Response of CMD08 command
+		uint32_t res08: 20;	
+		uint32_t VHS: 4;
+		uint32_t chk_pattern: 8;
 	};
 }s_args;
 
@@ -102,10 +101,30 @@ typedef union {
 	uint8_t er_seq_err : 1; 	// erase sequence error
 	uint8_t addr_err : 1; 	// address error
 	uint8_t parm_err : 1;	// parameter error
-	uint8_t : 1;
+	uint8_t m_0: 1;				// Mandatory 0 if response.
 	};
 	uint8_t b;		
 } s_r1;
+
+typedef enum {
+	SD_OK,				// No error
+	SD_ERR,			// No memory card
+	SD_V_ERR,		// Voltage range error
+	NOTSD,			// Not SD memory card
+} SD_INIT_RES;
+
+/* SD Memory card type */
+
+typedef enum  {
+	VER1X,			// Ver1.X Standard Capacity SD Memory Card
+	VER2SD,			// Ver2.00 or later Standard Capacity SD Memory Card
+	VER2HCSD,				// Ver2.00 Ver2.00 High Capacity or Extended Capacity SD Memory Card
+	VER_NONE = 100
+} SD_TYPE; 
+
+#define VHS_27_36V	(0b0001)	// 2.7-3.6 V voltage rangefor sd card.
+
+#define PATT_8BIT		(0b11010010)
 
 /* @brief Baud rate prescaler for configutration fhase, To the SD card SPI mode
  * must be at least 74 bits times keep high the data line. The max. SPI speed of 
@@ -116,6 +135,32 @@ typedef union {
 /* @brief Th prescaler determine the data stream of SPI2 SD card channel. 
  * */
 #define DATA_BAUD_PRESCALER		4
+ 
+/* Timeout for ad card spi write read datas. */ 
+ 
+#define SD_SPI2_TIMEOUT		1000 
+
+/*Timeout for reset card procedure. */
+
+#define SD_RESET_CARD_TIMEOUT		1000
+ 
+ /* define SDCRC7 to calculate for crc7 value with SD card I/O procedures. */
+ 
+#define SD_CRC7 
+ 
+#if defined (SD_CRC7)
+	void GenerateCRCTable(); 
+	uint8_t getCRCVal(uint8_t message[], int length); 
+#endif 
+ 
+void SD_SPI2_Init(); 
+void SD_Card_SPI_Select(); 
+
+SD_INIT_RES GetSDCardFeatures();
+
+/* @brief ResetCard() */
+SD_SPI_STATE ResetCard();
+
  
 #endif
 

@@ -6,6 +6,14 @@
 #include "init.h"
 #include "stm32f1xx_hal.h"
 
+/* CRC table for CRC7 procedure 
+ * Thanks for https://www.pololu.com/docs/0J1?section=5.f
+ * */
+#if defined (SD_CRC7)
+	uint8_t CRCPoly = 0x89;  // the value of our CRC-7 polynomial
+	uint8_t CRCTable[256];
+#endif
+
 /*	
  * @brief SD card SPI handle. SPI2 channel.Load datas for SD card initialize 
  * process.
@@ -52,6 +60,11 @@ void SD_Card_SPI_Select()
 
 void SD_SPI2_Init()
 {
+	/* Generate the CRC7 chacksum table. */
+#if defined (SD_CRC7)
+	GenerateCRCTable(); 
+#endif
+	
   GPIO_InitTypeDef  gpioinitstruct = {0};
 
 		/* Enable SPI2, and signal ports clock. */
@@ -90,32 +103,153 @@ void SD_SPI2_Init()
 
 } 
 
-/* SD_SPI_STATE SD_SPI_ReadExpectedByteWithinTimeOut(uint8_t* Value, SPI_HandleTypeDef 
- * handle, uint32_t TimeOut, uint8_t Expected)
- * @brief Reading from SD_SPI the expected byte. If expected data is come from SD_CARD 
- * within Timeout time, then will return with SD_SPI_OK with readed byte in Value for 
- * further uses. Else return with SD_SPI_TIMEOUT.*/
+/* SD_SPI_STATE SD_SPI_WaitValidResponse(s_r1* R1, SPI_HandleTypeDef 
+ * handle, uint32_t TimeOut)
+ * @brief Wait for valid response byte, or over time. Valid response byte with
+ * most significant bit is 0. */
 
-SD_SPI_STATE 
-	SD_SPI_ReadExpectedByteWithinTimeOut(uint8_t* Value, SPI_HandleTypeDef handle, 
-	uint32_t TimeOut, uint8_t Expected)
-{ SD_SPI_STATE retval;
+SD_SPI_STATE SD_SPI_WaitValidResponse(s_r1* R1, SPI_HandleTypeDef handle, uint32_t TimeOut)
+{
 	do {
-		SPI_ReadByte(Value, handle, 1000);
-	} while (((*Value) != Expected) && (TimeOut--));
-  return (*Value == Expected) ? SD_SPI_OK : SD_SPI_ERROR;
+		SPI_ReadByte((uint8_t*)R1, handle, 1000);
+	} while ((R1->m_0) && (TimeOut--));
+  return (!R1->m_0) ? SD_SPI_OK : SD_SPI_ERROR;
+}
+
+/* @brief SendSDCommand(uint8_t index, uint32_t args) 
+ * @params: index command index, args: argumentums 
+ * Simple command procedure */
+
+void SendSDCommand(uint8_t index, s_args args)
+{ s_command command;
+	command.start = 0;
+	command.trm = 1;
+	command.cind = index;
+	command.args = args;	
+#if defined (SD_CRC7)
+	command.crc7 = getCRCVal(command.datas, 5);
+#endif
+	command.end = 1;
+	SPI_WriteBuf(&command, sizeof(command), sd_spi2_handle, SD_SPI2_TIMEOUT);
 }
 
 /* @brief ResetCard() Reset card with GO_IDLE_STATE.  */
 SD_SPI_STATE ResetCard()
-{ s_command command; s_r1 r1; uint32_t TimeOut = 3000; 
+{ s_command command; s_r1 r1; SD_SPI_STATE retval;
 	SELECT_SD();
 	command.start = 0;
 	command.trm = 1;
 	command.cind = GO_IDLE_STATE;
 	command.args.argw = 0;	
+#if defined (SD_CRC7)
+	command.crc7 = getCRCVal(command.datas, 5);
+#else
+	/* CRC7 preset value for CMD0 command. */
 	command.crc7 = 0x4A;
+#endif
 	command.end = 1;
-	SPI_WriteBuf(&command, sizeof(command), sd_spi2_handle, 1000);
-	return SD_SPI_ReadExpectedByteWithinTimeOut(&r1.b, sd_spi2_handle, 40000, 0x01);
+	SPI_WriteBuf(&command, sizeof(command), sd_spi2_handle, SD_SPI2_TIMEOUT);
+	retval = SD_SPI_WaitValidResponse(&r1, sd_spi2_handle, SD_RESET_CARD_TIMEOUT);
+	DESELECT_SD();
+	return retval;
 }
+
+/*  Part_1_Physical_Layer_Simplified_Specification_Ver6.00.pdf 
+ * 	Figure 7-2 : SPI Mode Initialization Flow
+ * */
+
+SD_INIT_RES GetSDCardFeatures()
+{	s_command command; s_args args; s_r1 r1; SD_TYPE sd_type = VER_NONE; s_args resp;
+	args.chk_pattern = PATT_8BIT; 
+	args.VHS = VHS_27_36V;
+	args.res08 = 0;
+	SELECT_SD();
+	/* Try CMD 8 response*/
+	SendSDCommand(SEND_IF_COND, args);
+
+	if (SD_SPI_WaitValidResponse(&r1, sd_spi2_handle, SD_RESET_CARD_TIMEOUT) 
+				== SD_SPI_OK)
+	{	
+	
+	if (r1.b == 0x01)	// Idle state return?
+	{	/* All right get return datas */ 
+		
+		SPI_ReadBuf((uint8_t*)&resp.argw, sizeof(resp), sd_spi2_handle, 1000);
+		
+		if ((args.chk_pattern == PATT_8BIT) && (args.VHS == VHS_27_36V))
+		{
+			// Check pattern OK, and voltage OK.
+		} else
+		{
+			return SD_ERR;
+		}
+	} else
+	{
+		if ((r1.ill_comm_err) && (r1.idle_state))	// Illegal Command?
+		{ /* Ver1.X SD Memory Card or Not SD Memory Card */
+			sd_type = VER1X;
+		} else
+		{ /* @TODO May take further consequence, and return with. */
+			return SD_ERR;
+		}
+	}
+	} else
+	{	// not valid respunse...
+		return SD_ERR;
+	}
+	
+	
+	
+	/*	Here, if VER1X, or not */
+
+ 
+	
+//	retval = SD_SPI_ReadExpectedByteWithinTimeOut(&r1.b, sd_spi2_handle, SD_RESET_CARD_TIMEOUT, 0x01);
+		
+	
+	DESELECT_SD();
+	
+}
+
+/* ------------------- CRC7 procedures --------------------------*/
+/* @TODO The table maybe to write the flash memory. Or maybe calculate on-line, 
+ * not with table... */
+/* Based on https://www.pololu.com/docs/0J1?section=5.f */
+
+#if defined (SD_CRC7)
+
+void GenerateCRCTable()
+{
+	int i, j;
+ 
+	// generate a table value for all 256 possible byte values
+	for (i = 0; i < 256; i++)
+	{
+		CRCTable[i] = (i & 0x80) ? i ^ CRCPoly : i;
+		for (j = 1; j < 8; j++)
+			{
+				CRCTable[i] <<= 1;
+				if (CRCTable[i] & 0x80) CRCTable[i] ^= CRCPoly;
+			}
+	}
+}
+
+// adds a message byte to the current CRC-7 to get a the new CRC-7
+uint8_t CRCAdd(uint8_t CRC_VAL, uint8_t message_byte)
+{
+	return CRCTable[(CRC_VAL << 1) ^ message_byte];
+}
+
+// returns the CRC-7 for a message of "length" bytes
+uint8_t getCRCVal(uint8_t message[], int length)
+{
+	int i;
+	uint8_t CRC_VAL = 0;
+ 
+	for (i = 0; i < length; i++)
+		CRC_VAL = CRCAdd(CRC_VAL, message[i]);
+ 
+  return CRC_VAL;
+}
+
+#endif
